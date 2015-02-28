@@ -9,9 +9,9 @@ var url_mission = '1';
 
 casper.userAgent('Mozilla/5.0 (Linux; U; Android 2.2; en-us; ADR6300 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1');
 
-casper.start('http://v2ex.com/signin', function() {
-    this.wait(2000,function() {
-        this.echo("I've waited for 2 seconds");
+casper.start('https://www.v2ex.com/signin', function() {
+    this.wait(5000,function() {
+        this.echo("I've waited for 5 seconds");
     });
 }).then(function(){
     url = this.getCurrentUrl();
@@ -24,7 +24,7 @@ casper.start('http://v2ex.com/signin', function() {
 casper.waitForSelector('div.cell', function() {
     this.captureSelector('form.png', 'form[action="/signin"]');
     once = this.getElementAttribute('input[name="once"]', 'value');
-    url_mission = 'http://v2ex.com/mission/daily/redeem?once=' + once;
+    url_mission = 'https://v2ex.com/mission/daily';
     this.fillSelectors('form[action="/signin"]', {
         'input[name="u"]' : 'username',
         'input[name="p"]' : 'password',
@@ -42,7 +42,7 @@ casper.thenClick('input[value="登录"]', function(){
     this.echo(once);
     this.capture("logined.png");
 })
-/*
+
 casper.then(function(){
     this.open(url_mission);
 }).then(function(){
@@ -50,10 +50,10 @@ casper.then(function(){
 }).thenClick('input[value="领取 X 铜币"]', function(){
     this.capture("daily-do.png");
 })
-*/
+
 
 casper.then(function(){
-    this.open("http://v2ex.com/t");
+    this.open("https://v2ex.com/t");
 })
 
 casper.waitForSelector('div.box', function() {
@@ -68,7 +68,7 @@ casper.thenClick('input[value="发布"]', function(){
         this.echo("I've waited for 2 seconds");
     });
 }).then(function(){
-    this.open("http://v2ex.com/t");
+    this.open("https://v2ex.com/t");
 }).then(function(){
     this.capture("msg.png");
 });
