@@ -74,7 +74,7 @@ casper.thenClick('input[value="发布"]', function(){
 });
 
 casper.run();
-
+//测试一下，谢谢
 //console.log(url_mission);
 //console.log(once);
 
