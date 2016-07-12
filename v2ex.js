@@ -3,9 +3,17 @@ var casper = require('casper').create({
     verbose: true,
     logLevel: "debug"
 });
-var url = '';
+var user = casper.cli.get("user");
+var passwd = casper.cli.get("passwd");
+var debug = casper.cli.get('show');
+debug = debug ? debug : 'info'; // debug, info, warning, error
 var once = 0;
 var url_mission = '1';
+
+casper = require('casper').create({
+    verbose: true,
+    logLevel: debug,
+});
 
 casper.userAgent('Mozilla/5.0 (Linux; U; Android 2.2; en-us; ADR6300 Build/FRF91) AppleWebKit/533.1 (KHTML, like Gecko) Version/4.0 Mobile Safari/533.1');
 
@@ -20,17 +28,28 @@ casper.start('https://www.v2ex.com/signin', function() {
     this.capture("login.png");
 });
 
-
+// login form
 casper.waitForSelector('div.cell', function() {
     this.captureSelector('form.png', 'form[action="/signin"]');
     once = this.getElementAttribute('input[name="once"]', 'value');
+    str  = this.getElementsAttribute('input.sl', 'name');
     url_mission = 'https://v2ex.com/mission/daily';
-    this.fillSelectors('form[action="/signin"]', {
-        'input[name="u"]' : 'username',
-        'input[name="p"]' : 'password',
-        'input[name="next"]' : '/',
-        'input[name="once"]' : this.getElementAttribute('input[name="once"]', 'value')
-    }, false);
+    //this.fillSelectors('form[action="/signin"]', {
+    //    name : '',
+    //    passwd : '',
+    //    'input[name="next"]' : '/',
+    //    'input[name="once"]' : this.getElementAttribute('input[name="once"]', 'value')
+    //}, false);
+    var f_name   = str[0];
+    var f_passwd = str[1];
+    var data = {
+	'next' : '/',
+	'once' : this.getElementAttribute('input[name="once"]', 'value')
+    };
+    data[f_name] = user;
+    data[f_passwd] = passwd;
+    //require('utils').dump(data);
+    this.fill('form[action="/signin"]', data, false);
     //this.click('input[value="登录"]');
     //this.echo(this.getCurrentUrl());
     this.capture("login-fill.png");
@@ -43,6 +62,7 @@ casper.thenClick('input[value="登录"]', function(){
     this.capture("logined.png");
 })
 
+// todo 此处好像有点问题，没有领成功
 casper.then(function(){
     this.open(url_mission);
 }).then(function(){
